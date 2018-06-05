@@ -32,43 +32,42 @@ void random_nonce(char *nonce){
 
 }
 
-void calc_SHA256(char *string, char *hash, int hashlen){
-
-	BYTE buf[SHA256_BLOCK_SIZE];
+void calc_SHA256(BYTE data[], char *hash, int hashlen){
+        BYTE buf[SHA256_BLOCK_SIZE];
 	SHA256_CTX ctx;
-
+	
 	sha256_init(&ctx);
-	sha256_update(&ctx, string, strlen(string));
+	sha256_update(&ctx, data, sizeof(data) / sizeof(data[0]));
 	sha256_final(&ctx, buf);
 
-	string_change(buf,hash,64);
+	string_change(buf, hash, 64);
 
-	sha256_init(&ctx);
-	sha256_update(&ctx, hash, strlen(hash));
+	sha256_init(&ctx); 
+	sha256_update(&ctx, (BYTE *)hash, strlen(hash));
 	sha256_final(&ctx, buf);
 
-	string_change(buf,hash,hashlen);
-
-
+	string_change(buf, hash, hashlen);
 }
 
-void hash_SHA256(const char *ZERO_SIZE,const char* BLOCK,char* nonce){
+void hash_SHA256(const char *ZERO_SIZE, const char* BLOCK, char* nonce){
 
-	BYTE blocknonce[157+8+1];
+	BYTE *blocknonce;
+	char *c_blocknonce;
 	char hash[65];
 
 	do{
 	random_nonce(nonce);
 
-	strcpy(blocknonce,BLOCK);
-	strcat(blocknonce,nonce);
+	strcpy(c_blocknonce, BLOCK);
+	strcat(c_blocknonce, nonce);
 
-	calc_SHA256(blocknonce,hash,strlen(ZERO_SIZE));
+	blocknonce = (BYTE *) c_blocknonce;
+	calc_SHA256(blocknonce, hash, strlen(ZERO_SIZE));
 
-	} while(strcmp(hash,ZERO_SIZE));
+	} while(strcmp(hash, ZERO_SIZE));
 
 	//for debug
-	printf("blocknonce:%s\n",blocknonce);
+	printf("blocknonce:%s\n", *blocknonce);
 
 }
 
