@@ -1,16 +1,17 @@
+#include "calc_nonce.hpp"
+
+// #include "sha256_calc.h"
+
 #include <iostream>
 #include <string>
 #include <cstring>
 #include <cstdlib>
 
-#include "calc_nonce.hpp"
-#include "sha256_calc.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//#include "sha256_calc.h"
+#include "sha256_calc.h"
 
 #ifdef __cplusplus
 }

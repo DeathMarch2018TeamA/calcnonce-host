@@ -3,7 +3,7 @@
 
 #include <stdlib.h>	//rand()
 
-#include "sha256.h"
+#include "crypto-algorithms/sha256.h"
 #include "sha256_calc.h"
 
 void string_change(BYTE *hash, char *string_hash, int cpylen){
