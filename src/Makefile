@@ -3,22 +3,27 @@ CFLAGS		= -O2
 BINDIR		= ../bin
 TARGET		= $(BINDIR)/calcnonce-host
 SOURCES		= $(wildcard *.cpp)
-INCLUDE		= -I ../include -I ../lib/
+CSOURCES	= $(wildcard *.c)
+INCLUDE		= -I../include -I../lib/
 OBJDIR		= ../obj
-OBJECTS		= $(addprefix $(OBJDIR)/, $(SOURCES:.cpp=.o))
+SRCDIR		= ../src
+OBJECTS		= $(addprefix $(OBJDIR)/, $(SOURCES:%.cpp=%.o))
+COBJECTS	= $(addprefix $(OBJDIR)/, $(CSOURCES:%.c=%.o))
 
-$(TARGET):	$(OBJECTS)
+$(TARGET):	$(OBJECTS) $(COBJECTS)
 		@if [ ! -d $(BINDIR) ]; then\
 			mkdir $(BINDIR);\
 		fi
-		$(CC) $(CFLAGS) -o $@ $^
+		$(CC) $(CFLAGS) $(INCLUDE) -o $@ $^
 
-$(OBJDIR)/%.o:	%.cpp
+$(OBJECTS):	$(subst $(OBJDIR), $(SRCDIR), $(OBJECTS:%.o=%.cpp))
 		@if [ ! -d $(OBJDIR) ]; then\
 			mkdir $(OBJDIR);\
 		fi
 		@[ -d $(OBJDIR) ]
 		$(CC) $(CFLAGS) $(INCLUDE) -o $@ -c $<
 
+$(COBJECTS):	$(subst $(OBJDIR), $(SRCDIR), $(COBJECTS:%.o=%.c))
+		$(CC) $(CFLAGS) $(INCLUDE) -o $@ -c $<
 clean:
 		rm -rf $(OBJDIR)/*.o $(TARGET)
