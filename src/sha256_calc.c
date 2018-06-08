@@ -1,6 +1,5 @@
-#include <stdio.h>
+#include <stdio.h> 
 #include <string.h>
-
 #include <stdlib.h>	//rand()
 
 #include "crypto-algorithms/sha256.h"

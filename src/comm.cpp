@@ -1,11 +1,13 @@
 #include "comm.hpp"
 
+extern "C" {
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <netdb.h>
+}
 
 #include <iostream>
 #include <string>
@@ -110,5 +112,4 @@ bool finalize(void){
 
     return (strcmp(buf, FINISH_MESSAGE) & close(dstSocket)) == 0;
 }
-
 }

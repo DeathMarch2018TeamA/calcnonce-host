@@ -1,21 +1,11 @@
 #include "calc_nonce.hpp"
 
-// #include "sha256_calc.h"
-
 #include <iostream>
 #include <string>
 #include <cstring>
 #include <cstdlib>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "sha256_calc.h"
-
-#ifdef __cplusplus
-}
-#endif
 
 string *calc_nonce(string *zero_size, string *block){
 
@@ -28,7 +18,7 @@ string *calc_nonce(string *zero_size, string *block){
 
 	hash_SHA256(str_zero_size, str_block, nonce_buf);
 
-    nonce = new string(nonce_buf, 8);
+	nonce = new string(nonce_buf, 8);
 
 	return nonce;
 }
