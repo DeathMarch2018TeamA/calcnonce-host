@@ -1,57 +1,53 @@
-#include <iostream>	//cout
-#include <string>	//string
+#include <array>
+#include <iostream>	// cout
+#include <string>	// string
 
-#include <stdlib.h>	//rand,srand
+#include <cstdlib>	// rand,srand
 
-#include "comm.hpp"
 #include "calc_nonce.hpp"
+#include "comm.hpp"
 
-using std::cout;
-using std::endl;
-using std::string;
 using namespace shigeCoin;
 
-int main(void){
-    char team_name[] = "shigeCoin";
-    string *p_zero_num, *p_block[10], *p_nonce[10];
+int main(int argc, const char **argv) {
+    if (argc < 3) {
+        std::cerr << "Usage: " << argv[0] << " [IP_address] [port]";
+        return 1;
+    }
+
+    std::string team_name = "shigeCoin";
+    std::string zero_num;
+    std::array<std::string, 10> block, nonce;
 
     // seed set for randam_nonce()
     srand((unsigned)time(NULL));
     
     // sign up for server
-    if (!initialize(team_name)) {
-        cout << "failed to initialize socket" << endl;
-        return -1;
+    if (!initialize(team_name, argv[1], argv[2])) {
+        std::cout << "failed to initialize socket" << std::endl;
+        return 2;
     }
 
-    p_zero_num = get_zero();
-    cout << "zero_num:" << *p_zero_num << endl;
+    zero_num = get_zero();
+    std::cout << "zero_num: " << zero_num << std::endl;
 
     // calculate nonce
     for (int i = 0; i < 10; i++) {
-        p_block[i] = get_block();
-        p_nonce[i] = calc_nonce(p_zero_num, p_block[i]);
+        block[i] = get_block();
+        nonce[i] = calc_nonce(zero_num, block[i]);
 
-        if (!send_nonce(p_nonce[i])) {
-            cout << "failed to send nonce" << endl;
-            return -2;
+        if (!send_nonce(nonce[i])) {
+            std::cout << "failed to send nonce" << std::endl;
+            return 3;
         }
 
-        cout << "block:" << *p_block[i] << endl;
-        cout << "nonce:" << *p_nonce[i] << endl;
+        std::cout << "block: " << block[i] << std::endl;
+        std::cout << "nonce: " << nonce[i] << std::endl;
     }
 
     if (!finalize()) {
-        cout << "failed to finalize socket" << endl;
+        std::cout << "failed to finalize socket" << std::endl;
     }
 
-    // free dynamic memory
-    delete p_zero_num;
-    for(int i = 0; i < 10; i++){
-        delete p_block[i];
-        delete p_nonce[i];
-    }
-  
     return 0;
 }
-

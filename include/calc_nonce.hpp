@@ -1,9 +1,12 @@
-#ifndef CALC_NONCE_H
-#define CALC_NONCE_H
+#ifndef CALC_NONCE_HPP
+#define CALC_NONCE_HPP
 
 #include <string>
-using std::string;
 
-string *calc_nonce(string *zero_size, string *block);
+namespace shigeCoin {
+
+const std::string calc_nonce(const std::string zero_size, const std::string block);
+
+} // namespace shigeCoin
 
 #endif   // CALC_NONCE_H
